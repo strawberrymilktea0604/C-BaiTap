@@ -32,7 +32,11 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="bellman.cpp" />
+		<Unit filename="bellman.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="tsm.cpp" />
+		<Unit filename="tsm.h" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>
