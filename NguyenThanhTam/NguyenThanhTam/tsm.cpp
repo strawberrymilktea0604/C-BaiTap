@@ -1,9 +1,4 @@
 #include "tsm.h"
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <limits>
-using namespace std;
 
 // Function to solve Traveling Salesman Problem using brute force
 void Traveling(int edgeList[][3], int numEdges, char startVertex) {
@@ -42,7 +37,7 @@ void Traveling(int edgeList[][3], int numEdges, char startVertex) {
 
         if (u >= 0 && u < 256 && v >= 0 && v < 256) {
             if (adjMatrix[u][v] > weight) adjMatrix[u][v] = weight;
-            if (adjMatrix[v][u] > weight) adjMatrix[v][u] = weight; // Assuming undirected graph
+            if (adjMatrix[v][u] > weight) adjMatrix[v][u] = weight;
         }
     }
 

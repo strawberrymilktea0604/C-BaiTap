@@ -1,14 +1,8 @@
 #include "bellman.h"
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <limits>
-#include <sstream>
-using namespace std;
 
 // Function to implement Bellman-Ford algorithm
 void BF(int edgeList[][3], int numEdges, char startVertex, int BFValue[], int BFPrev[]) {
-    const int INF = 1000000000; // Use a large number instead of numeric_limits
+    const int INF = 1000000000;
 
     // Get all unique vertices from edge list first
     vector<int> vertices;
@@ -22,12 +16,12 @@ void BF(int edgeList[][3], int numEdges, char startVertex, int BFValue[], int BF
         if (!found1) vertices.push_back(edgeList[i][1]);
     }
 
-    int numVertices = vertices.size();
+    int numVertices = (int)vertices.size();
 
     // Initialize distances - only for vertices that exist in the graph
     for (size_t i = 0; i < vertices.size(); i++) {
         int vertex = vertices[i];
-        if (vertex >= 0 && vertex < 256) { // Safety check
+        if (vertex >= 0 && vertex < 256) {
             BFValue[vertex] = INF;
             BFPrev[vertex] = -1;
         }
@@ -47,7 +41,6 @@ void BF(int edgeList[][3], int numEdges, char startVertex, int BFValue[], int BF
             int v = edgeList[i][1];
             int weight = edgeList[i][2];
 
-            // Safety bounds check
             if (u >= 0 && u < 256 && v >= 0 && v < 256) {
                 if (BFValue[u] != INF && BFValue[u] + weight < BFValue[v]) {
                     BFValue[v] = BFValue[u] + weight;
@@ -95,7 +88,7 @@ void BF(int edgeList[][3], int numEdges, char startVertex, int BFValue[], int BF
 // Function to find and return path from start to goal vertex
 string BF_Path(int edgeList[][3], int numEdges, char startVertex, char goalVertex) {
     const int INF = 1000000000;
-    int BFValue[256]; // Increase array size
+    int BFValue[256];
     int BFPrev[256];
 
     // Get all unique vertices from edge list first
@@ -110,9 +103,9 @@ string BF_Path(int edgeList[][3], int numEdges, char startVertex, char goalVerte
         if (!found1) vertices.push_back(edgeList[i][1]);
     }
 
-    int numVertices = vertices.size();
+    int numVertices = (int)vertices.size();
 
-    // Initialize distances - only for vertices that exist in the graph
+    // Initialize distances
     for (int i = 0; i < 256; i++) {
         BFValue[i] = INF;
         BFPrev[i] = -1;

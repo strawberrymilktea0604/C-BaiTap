@@ -1,15 +1,17 @@
 #include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
-#include <algorithm>
-#include <random>
 #include <cstdlib>
 #include <ctime>
-#include "bellman.h"
-#include "tsm.h"
+#include <limits>
+#include <random>
+#include <vector>
+#include <sstream>
+#include <fstream>
+#include <string>
+#include <algorithm>
 using namespace std;
 #define MAX 1000
+#include "bellman.h"
+#include "tsm.h"
 
 //Function to print an edge
 void printedge(int[]);
@@ -19,17 +21,15 @@ int edgeListGen(int[][3],int,int,int);
 //main Function
 int main()
 {
-    //Function name for checking
     enum Func_check {FUNC_BF, FUNC_BF_PATH, FUNC_TRAVELING, FUNC_NONE};
 
-    bool randGen=0; // Set to 0 to read from file
+    bool randGen=0;
     int edgeList[MAX][3] ;
     int numEdges=40;
     int numVertices=10;
     int initlimit=15;
 
     if(!randGen){
-        //Read from file
         ifstream fin("EdgeList.txt");
         if (!fin.is_open()) {
             cout << "Error: Cannot open EdgeList.txt" << endl;
@@ -41,25 +41,22 @@ int main()
         fin.close();
     }
     else{
-        //Generate a random edgelist:
         if(edgeListGen(edgeList,numEdges,numVertices,initlimit)<0) return -1;
     }
 
-    // Print some debug info
     cout << "Graph loaded with " << numEdges << " edges:" << endl;
-    for(int i=0;i<5 && i<numEdges;i++){ // Print first 5 edges
+    for(int i=0;i<5 && i<numEdges;i++){
         cout << "Edge " << i << ": " << char(edgeList[i][0]) << " -> "
              << char(edgeList[i][1]) << " (weight: " << edgeList[i][2] << ")" << endl;
     }
     cout << "..." << endl;
 
-    //Check the chosen function:
     Func_check func = FUNC_BF;
 
     switch(func){
         case FUNC_BF:
         {
-            int BFValue[256]; // Increase size
+            int BFValue[256];
             int BFPrev[256];
             char start_vertices = edgeList[0][0];
             cout << "\n=== Running Bellman-Ford Algorithm ===" << endl;
@@ -90,16 +87,13 @@ int main()
     return 0;
 }
 
-//support function definition
 void printedge(int edge[]){
     cout<<char(edge[0])<<" -> "<<char(edge[1])<<", weight: "<<edge[2]<<endl;
 }
 
-int edgeListGen(int edgeList[][3],int numEdges,int numVertices,int initlimit=1){
-    //random generator init
+int edgeListGen(int edgeList[][3],int numEdges,int numVertices,int initlimit){
     srand((unsigned int)time(NULL));
 
-    //exception
     if(numEdges>(numVertices*(numVertices-1))/2){
         cout<<"cannot create simple graph";
         return -1;
@@ -109,18 +103,16 @@ int edgeListGen(int edgeList[][3],int numEdges,int numVertices,int initlimit=1){
         return -1;
     }
 
-    //generate random vertices' names
     int* verList=new int[numVertices];
     vector<int> verName;
     for(int i=33;i<=126;i++){verName.push_back(i);}
     random_shuffle(verName.begin(),verName.end());
     for(int i=0;i<numVertices;i++){verList[i]=verName[i];}
 
-    //generate random edges, ensure that each vertices will have at least 1 edges;
     bool flag=0;
     vector<pair<int,int> > fullList;
     for(int i=0;i<numVertices;i++){
-        for(int j=i+1;j<numVertices;j++){ // Fixed: was breaking at i==j
+        for(int j=i+1;j<numVertices;j++){
             fullList.push_back(make_pair(verList[i],verList[j]));
         }
     }
@@ -160,16 +152,15 @@ int edgeListGen(int edgeList[][3],int numEdges,int numVertices,int initlimit=1){
     delete[] checkList;
 
     ofstream fout("EdgeList.txt");
-    //generate the weights
-    if(initlimit<=1){//All the weights will be 1
+    if(initlimit<=1){
         for(int i=0;i<numEdges;i++){
             edgeList[i][2]=1;
             fout<<edgeList[i][0]<<" "<<edgeList[i][1]<<" "<<edgeList[i][2]<<endl;
         }
     }
-    else{//randomize edges' weights
+    else{
         for(int i=0;i<numEdges;i++){
-            edgeList[i][2]=rand()%initlimit + 1; // Add 1 to avoid 0 weights
+            edgeList[i][2]=rand()%initlimit + 1;
             fout<<edgeList[i][0]<<" "<<edgeList[i][1]<<" "<<edgeList[i][2]<<endl;
         }
     }

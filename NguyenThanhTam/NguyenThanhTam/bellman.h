@@ -2,6 +2,11 @@
 #define BELLMAN_H
 
 #include <string>
+#include <vector>
+#include <iostream>
+#include <sstream>
+#include <algorithm>
+
 using namespace std;
 
 // Function to implement Bellman-Ford algorithm
