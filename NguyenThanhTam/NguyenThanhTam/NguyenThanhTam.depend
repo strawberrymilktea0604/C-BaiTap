@@ -1,0 +1,33 @@
+# depslib dependency file v1.0
+1750007690 source:c:\users\minhk\downloads\code thuê\c++\nguyenthanhtam\nguyenthanhtam\tsm.cpp
+	"tsm.h"
+
+1750007662 c:\users\minhk\downloads\code thuê\c++\nguyenthanhtam\nguyenthanhtam\tsm.h
+	<iostream>
+	<vector>
+	<algorithm>
+
+1750010229 source:c:\users\minhk\downloads\code thuê\c++\nguyenthanhtam\nguyenthanhtam\bellman.cpp
+	"bellman.h"
+	<sstream>
+
+1750010212 c:\users\minhk\downloads\code thuê\c++\nguyenthanhtam\nguyenthanhtam\bellman.h
+	<string>
+	<vector>
+	<iostream>
+	<algorithm>
+
+1750010248 source:c:\users\minhk\downloads\code thuê\c++\nguyenthanhtam\nguyenthanhtam\main.cpp
+	<iostream>
+	<cstdlib>
+	<ctime>
+	<limits>
+	<random>
+	<vector>
+	<sstream>
+	<fstream>
+	<string>
+	<algorithm>
+	"bellman.h"
+	"tsm.h"
+

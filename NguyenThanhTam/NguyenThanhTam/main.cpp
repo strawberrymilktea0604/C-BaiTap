@@ -58,7 +58,7 @@ int main()
         {
             int BFValue[256];
             int BFPrev[256];
-            char start_vertices = edgeList[0][0];
+            char start_vertices = (char)edgeList[0][0]; // Explicit cast
             cout << "\n=== Running Bellman-Ford Algorithm ===" << endl;
             cout << "Starting from vertex: " << char(start_vertices) << " (ASCII: " << (int)start_vertices << ")" << endl;
             BF(edgeList,numEdges,start_vertices,BFValue,BFPrev);
@@ -66,8 +66,8 @@ int main()
         }
         case FUNC_BF_PATH:
         {
-            char start_vertices = edgeList[0][0];
-            char end_vertices = edgeList[1][1];
+            char start_vertices = (char)edgeList[0][0]; // Explicit cast
+            char end_vertices = (char)edgeList[1][1]; // Explicit cast
             cout << "\n=== Running Bellman-Ford Path Algorithm ===" << endl;
             cout << "From: " << char(start_vertices) << " To: " << char(end_vertices) << endl;
             BF_Path(edgeList,numEdges,start_vertices,end_vertices);
@@ -75,7 +75,7 @@ int main()
         }
         case FUNC_TRAVELING:
         {
-            char start_vertices = edgeList[0][0];
+            char start_vertices = (char)edgeList[0][0]; // Explicit cast
             cout << "\n=== Running Traveling Salesman Algorithm ===" << endl;
             cout << "Starting from vertex: " << char(start_vertices) << endl;
             Traveling(edgeList,numEdges,start_vertices);

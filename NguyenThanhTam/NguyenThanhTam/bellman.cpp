@@ -1,4 +1,5 @@
 #include "bellman.h"
+#include <sstream>
 
 // Function to implement Bellman-Ford algorithm
 void BF(int edgeList[][3], int numEdges, char startVertex, int BFValue[], int BFPrev[]) {
@@ -140,7 +141,7 @@ string BF_Path(int edgeList[][3], int numEdges, char startVertex, char goalVerte
 
     // Handle case where start and goal are the same
     if (startVertex == goalVertex) {
-        string result = "";
+        string result;
         result += char(startVertex);
         cout << "Path from " << char(startVertex) << " to " << char(goalVertex) << ": " << result << endl;
         cout << "Total distance: 0" << endl;
@@ -165,15 +166,14 @@ string BF_Path(int edgeList[][3], int numEdges, char startVertex, char goalVerte
     // Reverse to get path from start to goal
     reverse(path.begin(), path.end());
 
-    // Convert to string with spaces
-    stringstream ss;
+    // Convert to string with spaces - KHÔNG dùng stringstream
+    string result;
     for (size_t i = 0; i < path.size(); i++) {
-        ss << path[i];
+        result += path[i];
         if (i < path.size() - 1) {
-            ss << " ";
+            result += " ";
         }
     }
-    string result = ss.str();
 
     cout << "Shortest path from " << char(startVertex) << " to " << char(goalVertex) << ": " << result << endl;
     cout << "Total distance: " << BFValue[(int)goalVertex] << endl;
