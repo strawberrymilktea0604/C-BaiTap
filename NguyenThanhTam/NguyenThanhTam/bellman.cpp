@@ -19,36 +19,48 @@ void BF(int edgeList[][3], int numEdges, char startVertex, int BFValue[], int BF
 
     int numVertices = (int)vertices.size();
 
-    // Initialize distances - only for vertices that exist in the graph
-    for (size_t i = 0; i < vertices.size(); i++) {
-        int vertex = vertices[i];
-        if (vertex >= 0 && vertex < 256) {
-            BFValue[vertex] = INF;
-            BFPrev[vertex] = -1;
-        }
+    // Initialize ALL possible vertices (0-255) to INF first
+    for (int i = 0; i < 256; i++) {
+        BFValue[i] = INF;
+        BFPrev[i] = -1;
     }
 
     // Set distance to start vertex as 0
-    if ((int)startVertex >= 0 && (int)startVertex < 256) {
-        BFValue[(int)startVertex] = 0;
-    }
+    BFValue[(int)startVertex] = 0;
 
-    // Relax edges repeatedly
-    bool updated = true;
-    for (int iteration = 0; iteration < numVertices - 1 && updated; iteration++) {
-        updated = false;
+    // Debug: Print initial state
+    cout << "Start vertex: " << char(startVertex) << " (ASCII: " << (int)startVertex << ")" << endl;
+    cout << "Number of vertices: " << numVertices << endl;
+    cout << "Number of edges: " << numEdges << endl;
+
+    // Relax edges repeatedly (V-1 times)
+    for (int iteration = 0; iteration < numVertices - 1; iteration++) {
+        bool updated = false;
+
         for (int i = 0; i < numEdges; i++) {
             int u = edgeList[i][0];
             int v = edgeList[i][1];
             int weight = edgeList[i][2];
 
-            if (u >= 0 && u < 256 && v >= 0 && v < 256) {
-                if (BFValue[u] != INF && BFValue[u] + weight < BFValue[v]) {
-                    BFValue[v] = BFValue[u] + weight;
-                    BFPrev[v] = u;
-                    updated = true;
-                }
+            // Relax edge u -> v
+            if (BFValue[u] != INF && BFValue[u] + weight < BFValue[v]) {
+                BFValue[v] = BFValue[u] + weight;
+                BFPrev[v] = u;
+                updated = true;
             }
+
+            // For undirected graph, also relax edge v -> u
+            if (BFValue[v] != INF && BFValue[v] + weight < BFValue[u]) {
+                BFValue[u] = BFValue[v] + weight;
+                BFPrev[u] = v;
+                updated = true;
+            }
+        }
+
+        // If no update in this iteration, we can break early
+        if (!updated) {
+            cout << "Converged after " << (iteration + 1) << " iterations" << endl;
+            break;
         }
     }
 
@@ -59,11 +71,13 @@ void BF(int edgeList[][3], int numEdges, char startVertex, int BFValue[], int BF
         int v = edgeList[i][1];
         int weight = edgeList[i][2];
 
-        if (u >= 0 && u < 256 && v >= 0 && v < 256) {
-            if (BFValue[u] != INF && BFValue[u] + weight < BFValue[v]) {
-                hasNegativeCycle = true;
-                break;
-            }
+        if (BFValue[u] != INF && BFValue[u] + weight < BFValue[v]) {
+            hasNegativeCycle = true;
+            break;
+        }
+        if (BFValue[v] != INF && BFValue[v] + weight < BFValue[u]) {
+            hasNegativeCycle = true;
+            break;
         }
     }
 
@@ -72,21 +86,19 @@ void BF(int edgeList[][3], int numEdges, char startVertex, int BFValue[], int BF
         return;
     }
 
-    // Print results
+    // Print results for vertices that exist in the graph
     cout << "Bellman-Ford shortest distances from " << char(startVertex) << ":" << endl;
     for (size_t i = 0; i < vertices.size(); i++) {
         int vertex = vertices[i];
-        if (vertex >= 0 && vertex < 256) {
-            if (BFValue[vertex] == INF) {
-                cout << "To " << char(vertex) << ": INF" << endl;
-            } else {
-                cout << "To " << char(vertex) << ": " << BFValue[vertex] << endl;
-            }
+        if (BFValue[vertex] == INF) {
+            cout << "To " << char(vertex) << ": INF" << endl;
+        } else {
+            cout << "To " << char(vertex) << ": " << BFValue[vertex] << endl;
         }
     }
 }
 
-// Function to find and return path from start to goal vertex
+// Function to find and return path from start to goal vertex - CHỈ RETURN, KHÔNG COUT
 string BF_Path(int edgeList[][3], int numEdges, char startVertex, char goalVertex) {
     const int INF = 1000000000;
     int BFValue[256];
@@ -113,9 +125,7 @@ string BF_Path(int edgeList[][3], int numEdges, char startVertex, char goalVerte
     }
 
     // Set distance to start vertex as 0
-    if ((int)startVertex >= 0 && (int)startVertex < 256) {
-        BFValue[(int)startVertex] = 0;
-    }
+    BFValue[(int)startVertex] = 0;
 
     // Relax edges repeatedly
     for (int iteration = 0; iteration < numVertices - 1; iteration++) {
@@ -124,18 +134,22 @@ string BF_Path(int edgeList[][3], int numEdges, char startVertex, char goalVerte
             int v = edgeList[i][1];
             int weight = edgeList[i][2];
 
-            if (u >= 0 && u < 256 && v >= 0 && v < 256) {
-                if (BFValue[u] != INF && BFValue[u] + weight < BFValue[v]) {
-                    BFValue[v] = BFValue[u] + weight;
-                    BFPrev[v] = u;
-                }
+            // Relax edge u -> v
+            if (BFValue[u] != INF && BFValue[u] + weight < BFValue[v]) {
+                BFValue[v] = BFValue[u] + weight;
+                BFPrev[v] = u;
+            }
+
+            // For undirected graph, also relax edge v -> u
+            if (BFValue[v] != INF && BFValue[v] + weight < BFValue[u]) {
+                BFValue[u] = BFValue[v] + weight;
+                BFPrev[u] = v;
             }
         }
     }
 
     // Check if goal is reachable
-    if ((int)goalVertex < 0 || (int)goalVertex >= 256 || BFValue[(int)goalVertex] == INF) {
-        cout << "No path exists from " << char(startVertex) << " to " << char(goalVertex) << endl;
+    if (BFValue[(int)goalVertex] == INF) {
         return "No path exists";
     }
 
@@ -143,8 +157,6 @@ string BF_Path(int edgeList[][3], int numEdges, char startVertex, char goalVerte
     if (startVertex == goalVertex) {
         string result;
         result += char(startVertex);
-        cout << "Path from " << char(startVertex) << " to " << char(goalVertex) << ": " << result << endl;
-        cout << "Total distance: 0" << endl;
         return result;
     }
 
@@ -159,14 +171,13 @@ string BF_Path(int edgeList[][3], int numEdges, char startVertex, char goalVerte
 
     // Check if we successfully traced back to start
     if (path.empty() || path[path.size()-1] != startVertex) {
-        cout << "No valid path found from " << char(startVertex) << " to " << char(goalVertex) << endl;
         return "No path exists";
     }
 
     // Reverse to get path from start to goal
     reverse(path.begin(), path.end());
 
-    // Convert to string with spaces - KH�NG d�ng stringstream
+    // Convert to string with spaces - CHỈ RETURN, KHÔNG COUT
     string result;
     for (size_t i = 0; i < path.size(); i++) {
         result += path[i];
@@ -175,8 +186,5 @@ string BF_Path(int edgeList[][3], int numEdges, char startVertex, char goalVerte
         }
     }
 
-    cout << "Shortest path from " << char(startVertex) << " to " << char(goalVertex) << ": " << result << endl;
-    cout << "Total distance: " << BFValue[(int)goalVertex] << endl;
-
-    return result;
+    return result; // CHỈ RETURN, KHÔNG COUT
 }
